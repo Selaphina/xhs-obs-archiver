@@ -90,21 +90,6 @@ Failed note_ids:
 - No author timeline sync yet
 - Depends on upstream `xiaohongshu-cli` behavior and API stability
 
-## Privacy
-
-Do not publish personal cookies or private archive data.
-
-Recommended `.gitignore` entries:
-
-```gitignore
-.local_state/
-_assets/
-_raw/
-_raw_failed/
-小红书归档/
-config/xhs_urls.txt
-```
-
 ## Disclaimer
 
 Use this project responsibly and comply with Xiaohongshu's terms, local laws, and privacy expectations. This repository is intended for personal archival and research workflows.
@@ -192,17 +177,3 @@ _raw_failed/xiaohongshu/<时间戳>_<note_id>.stdout.txt
 - 还没有做博主主页增量同步
 - 依赖上游 `xiaohongshu-cli` 的输出稳定性
 
-## 隐私与安全
-
-不要把 cookies、本地归档内容和失败快照提交到公开仓库。
-
-建议忽略：
-
-```gitignore
-.local_state/
-_assets/
-_raw/
-_raw_failed/
-小红书归档/
-config/xhs_urls.txt
-```
