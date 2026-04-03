@@ -1,70 +1,33 @@
 ﻿# xhs-obs-archiver
 
-Archive Xiaohongshu notes into a local, Obsidian-friendly repository with Markdown, downloaded images, and raw JSON snapshots.
+[EN](# xhs-obs-archiver)/[CH](# 中文说明)
 
-This project is built around [`xiaohongshu-cli`](https://github.com/jackwener/xiaohongshu-cli) and is designed for people who want a personal, searchable archive of Xiaohongshu posts they care about, even if the original post is later deleted, hidden, or edited.
+**Python:** 3.9+
+
+Archive Xiaohongshu notes into an Obsidian-friendly local repository with Markdown, downloaded images, and raw JSON snapshots.
+
+Built on top of [`xiaohongshu-cli`](https://github.com/jackwener/xiaohongshu-cli).
 
 ## Features
 
 - Archive one or many Xiaohongshu note URLs
-- Convert note content into Markdown files suitable for Obsidian
-- Download note images to local storage and embed them in Markdown
-- Preserve raw API responses for future reprocessing
-- Keep failed outputs for debugging and retry
-- Reuse an existing `xhs login` session
+- Save notes as Markdown for Obsidian
+- Download images to local storage and embed them in Markdown
+- Keep raw JSON responses for future reprocessing
+- Save failed stdout/stderr for debugging
 - Print batch summaries with success and failure counts
-
-## How It Works
-
-For each Xiaohongshu note URL, the script will:
-
-1. Call `xhs read <url> --json`
-2. Parse note metadata and content
-3. Save note content as Markdown
-4. Download all available images to local storage
-5. Save the original JSON response alongside the archive
-6. Print a summary at the end of the batch run
-
-## Repository Layout
-
-```text
-.
-├─ config/
-│  ├─ xhs_urls.example.txt
-│  └─ xhs_urls.txt
-├─ scripts/
-│  └─ archive_xhs.py
-├─ 小红书归档/
-│  └─ <author>/<year>/*.md
-├─ _assets/
-│  └─ xiaohongshu/<author>/<year>/<note_id>/image_*.jpg
-├─ _raw/
-│  └─ xiaohongshu/<author>/<year>/*.json
-├─ _raw_failed/
-│  └─ xiaohongshu/*.stdout.txt
-└─ README.md
-```
 
 ## Requirements
 
-- Windows PowerShell environment was the initial target, but the script itself is plain Python
 - Python 3.9+
 - [`xiaohongshu-cli`](https://github.com/jackwener/xiaohongshu-cli)
-- A valid Xiaohongshu login session via `xhs login`
+- A valid Xiaohongshu session via `xhs login`
 
-## Installation
-
-Install `xiaohongshu-cli` first.
-
-If you use `uv`:
+## Install
 
 ```bash
 uv tool install xiaohongshu-cli
-```
-
-If you use `pipx`:
-
-```bash
+# or
 pipx install xiaohongshu-cli
 ```
 
@@ -77,76 +40,33 @@ xhs status
 
 ## Usage
 
-### Archive from a URL list
-
-Create your input file from the example template:
+Archive from a URL list:
 
 ```powershell
 Copy-Item config\xhs_urls.example.txt config\xhs_urls.txt
-```
-
-Put one Xiaohongshu note URL per line into `config\xhs_urls.txt`, then run:
-
-```powershell
 python scripts\archive_xhs.py
 ```
 
-### Archive a single note
+Archive a single note:
 
 ```powershell
 python scripts\archive_xhs.py --input config\__empty__.txt --url "https://www.xiaohongshu.com/explore/<note_id>?xsec_token=<token>&xsec_source=pc_user"
 ```
 
-### Overwrite existing files
+Overwrite existing outputs:
 
 ```powershell
 python scripts\archive_xhs.py --overwrite
 ```
 
-## Output Format
-
-### Markdown
-
-Archived notes are stored under:
+## Output
 
 ```text
 小红书归档/<author>/<year>/<date> <note_id> <title>.md
-```
-
-Each note contains:
-
-- frontmatter metadata
-- source URL
-- author and publish time
-- note text content
-- local Obsidian image embeds such as `![[...]]`
-
-### Images
-
-Images are downloaded to:
-
-```text
 _assets/xiaohongshu/<author>/<year>/<note_id>/image_01.jpg
-```
-
-### Raw JSON
-
-Raw responses are saved to:
-
-```text
 _raw/xiaohongshu/<author>/<year>/<date> <note_id> <title>.json
-```
-
-### Failed Raw Output
-
-If `xiaohongshu-cli` returns broken or truncated output, the script stores the original stdout and stderr for inspection:
-
-```text
 _raw_failed/xiaohongshu/<timestamp>_<note_id>.stdout.txt
-_raw_failed/xiaohongshu/<timestamp>_<note_id>.stderr.txt
 ```
-
-## Batch Summary
 
 At the end of each run, the script prints a summary like:
 
@@ -157,27 +77,24 @@ Failed note_ids:
 - 69yyyyyyyyyyyyyyyyyyyyyy
 ```
 
-## Notes on Reliability
+## Notes
 
-This project includes several workarounds for common Windows and CLI issues:
-
-- Forces UTF-8 for the `xhs` subprocess to avoid `gbk` encoding crashes on emoji-containing posts
-- Redirects `xhs` runtime state into the repository-local `.local_state/` directory
-- Saves failed outputs for postmortem debugging
-- Avoids parallel Xiaohongshu requests to reduce account risk
+- Images are downloaded locally; if a download fails, the original URL is kept in Markdown.
+- The script forces UTF-8 for the `xhs` subprocess to avoid Windows `gbk` encoding failures on emoji-containing posts.
+- `xhs` runtime state is redirected into repository-local `.local_state/`.
+- Requests are intentionally sequential to reduce account risk.
 
 ## Limitations
 
 - No video download yet
-- No automatic author timeline sync yet
-- Requires a valid logged-in Xiaohongshu session
+- No author timeline sync yet
 - Depends on upstream `xiaohongshu-cli` behavior and API stability
 
-## Privacy and Security
+## Privacy
 
-Do not commit personal cookies or private archive data to a public repository.
+Do not publish personal cookies or private archive data.
 
-At minimum, make sure the following paths are ignored by Git in real use:
+Recommended `.gitignore` entries:
 
 ```gitignore
 .local_state/
@@ -188,19 +105,104 @@ _raw_failed/
 config/xhs_urls.txt
 ```
 
-## Roadmap
-
-- Incremental sync from author profiles
-- Better duplicate detection
-- Video/media preservation
-- Metadata enrichment and tagging strategies
-- Scheduled archive jobs
-
-## Acknowledgements
-
-- [`xiaohongshu-cli`](https://github.com/jackwener/xiaohongshu-cli) for the Xiaohongshu access layer
-- [Obsidian](https://obsidian.md/) for local knowledge-base workflows
-
 ## Disclaimer
 
 Use this project responsibly and comply with Xiaohongshu's terms, local laws, and privacy expectations. This repository is intended for personal archival and research workflows.
+
+---
+
+# 中文说明
+
+**Python 版本：** 3.9+
+
+这是一个把小红书笔记归档到本地仓库的工具，适合配合 Obsidian 使用。它会把网页 URL 对应的笔记整理成 Markdown，下载图片到本地，并保留原始 JSON 快照，便于后续检索、重建和长期保存。
+
+底层依赖 [`xiaohongshu-cli`](https://github.com/jackwener/xiaohongshu-cli)。
+
+## 功能
+
+- 支持单条或批量归档小红书笔记 URL
+- 生成适合 Obsidian 的 Markdown
+- 下载图片到本地并在 Markdown 中嵌入
+- 保存原始 JSON 响应
+- 保存失败时的 stdout / stderr 便于排查
+- 批量执行结束后输出成功数、失败数和失败 note_id 列表
+
+## 环境要求
+
+- Python 3.9+
+- 已安装 `xiaohongshu-cli`
+- 已完成 `xhs login`
+
+## 安装
+
+```bash
+uv tool install xiaohongshu-cli
+# 或
+pipx install xiaohongshu-cli
+```
+
+登录：
+
+```powershell
+xhs login
+xhs status
+```
+
+## 使用方法
+
+批量归档：
+
+```powershell
+Copy-Item config\xhs_urls.example.txt config\xhs_urls.txt
+python scripts\archive_xhs.py
+```
+
+单条归档：
+
+```powershell
+python scripts\archive_xhs.py --input config\__empty__.txt --url "https://www.xiaohongshu.com/explore/<note_id>?xsec_token=<token>&xsec_source=pc_user"
+```
+
+覆盖已有输出：
+
+```powershell
+python scripts\archive_xhs.py --overwrite
+```
+
+## 输出目录
+
+```text
+小红书归档/<作者>/<年份>/<日期> <note_id> <标题>.md
+_assets/xiaohongshu/<作者>/<年份>/<note_id>/image_01.jpg
+_raw/xiaohongshu/<作者>/<年份>/<日期> <note_id> <标题>.json
+_raw_failed/xiaohongshu/<时间戳>_<note_id>.stdout.txt
+```
+
+## 说明
+
+- 图片会优先下载到本地；如果个别图片下载失败，Markdown 中会保留原图链接。
+- 为了避免 Windows 下 `gbk` 编码导致 emoji 文章输出中断，脚本会强制 `xhs` 子进程使用 UTF-8。
+- `xhs` 的运行状态被重定向到仓库本地 `.local_state/`，避免污染系统目录。
+- 请求默认串行执行，不做并发，主要是为了降低风控风险。
+
+## 当前限制
+
+- 还不支持视频下载
+- 还没有做博主主页增量同步
+- 依赖上游 `xiaohongshu-cli` 的输出稳定性
+
+## 隐私与安全
+
+不要把 cookies、本地归档内容和失败快照提交到公开仓库。
+
+建议忽略：
+
+```gitignore
+.local_state/
+_assets/
+_raw/
+_raw_failed/
+小红书归档/
+config/xhs_urls.txt
+```
