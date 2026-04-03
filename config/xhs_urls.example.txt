@@ -1,0 +1,4 @@
+# 每行一个小红书笔记 URL
+# 支持带 xsec_token 的完整网页地址
+
+https://www.xiaohongshu.com/explore/请替换成真实note_id?xsec_token=请替换成真实token

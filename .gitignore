@@ -1,0 +1,21 @@
+﻿# Secrets and local runtime state
+.local_state/
+
+# User input and local config
+config/xhs_urls.txt
+
+# Generated archive outputs
+_assets/
+_raw/
+_raw_failed/
+小红书归档/
+
+# Python cache and build artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
