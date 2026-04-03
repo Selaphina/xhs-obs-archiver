@@ -1,6 +1,6 @@
 ﻿# xhs-obs-archiver
 
-[EN](# xhs-obs-archiver)/[CH](# 中文说明)
+[EN](https://github.com/Selaphina/xhs-obs-archiver?tab=readme-ov-file#xhs-obs-archiver)/[中文](https://github.com/Selaphina/xhs-obs-archiver?tab=readme-ov-file#中文说明)
 
 **Python:** 3.9+
 
