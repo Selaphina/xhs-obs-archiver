@@ -1,5 +1,6 @@
 ﻿# Secrets and local runtime state
 .local_state/
+.obsidian/
 
 # User input and local config
 config/xhs_urls.txt
