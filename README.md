@@ -130,7 +130,7 @@ pipx install xiaohongshu-cli
 登录：
 
 ```powershell
-xhs login
+xhs login --qrcode
 xhs status
 ```
 
@@ -139,7 +139,7 @@ xhs status
 批量归档：
 
 ```powershell
-Copy-Item config\xhs_urls.example.txt config\xhs_urls.txt
+config\xhs_urls.example.txt config\xhs_urls.txt
 python scripts\archive_xhs.py
 ```
 
